@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WANDERLUST | Cinematic Travel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;500;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. CSS VARIABLES & RESET --- */
+        :root {
+            --dark: #0a0a0a;
+            --gold: #d4af37;
+            --white: #f0f0f0;
+            --ease: cubic-bezier(0.23, 1, 0.32, 1); /* Smooth cinematic easing */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; /* Hides standard cursor */ }
+
+        body {
+            background-color: var(--dark);
+            color: var(--white);
+            font-family: 'Manrope', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- 2. CUSTOM MAGNETIC CURSOR --- */
+        .cursor {
+            width: 20px; height: 20px;
+            border: 1px solid var(--white);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+            mix-blend-mode: difference; /* The effect that inverts colors */
+        }
+        /* State when hovering over clickable links */
+        .cursor.hovered { background-color: var(--white); width: 50px; height: 50px; opacity: 0.5; border: none; }
+
+        /* --- 3. HERO SECTION (Opening Screen) --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* High-quality hero image */
+            background: url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80') no-repeat center/cover;
+            filter: brightness(0.6);
+            transform: scale(1.1);
+            animation: breathe 20s infinite alternate; /* Slow zoom effect */
+        }
+
+        @keyframes breathe { to { transform: scale(1.2); } }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            mix-blend-mode: overlay;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 8vw; /* Responsive font size */
+            line-height: 0.9;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeUp 1.5s var(--ease) forwards 0.5s; /* Entrance animation */
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 1.5s var(--ease) forwards 1s;
+        }
+
+        /* --- 4. SCROLL PROGRESS BAR --- */
+        .progress-bar {
+            position: fixed;
+            top: 0; left: 0; height: 4px;
+            background: var(--gold);
+            width: 0%;
+            z-index: 1000;
+        }
+
+        /* --- 5. 3D STORIES GRID --- */
+        .stories-section {
+            padding: 10vh 5vw;
+            position: relative;
+        }
+
+        .section-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 4rem;
+            perspective: 1000px; /* CRITICAL: Creates the 3D space */
+        }
+
+        .card {
+            position: relative;
+            height: 500px;
+            transform-style: preserve-3d; /* Allows children to be in 3D space */
+            transform: rotateX(0) rotateY(0);
+            transition: transform 0.1s; /* Super fast transition for real-time feel */
+        }
+
+        .card-inner {
+            position: absolute;
+            width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            pointer-events: none; /* Ensures mouse events pass through to the parent .card */
+        }
+        
+        .card-overlay {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            transform: translateZ(50px); /* Pushes text towards the user in 3D space */
+            pointer-events: none;
+        }
+
+        .card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p { font-size: 0.9rem; opacity: 0.8; margin-bottom: 1rem; }
+
+        .read-btn {
+            display: inline-block;
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 5px;
+            color: var(--gold);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            pointer-events: auto; /* Re-enable events for the button */
+        }
+        .read-btn:hover { color: white; border-color: white; }
+
+        /* Scroll Reveal Classes */
+        .hidden { opacity: 0; transform: translateY(50px); transition: all 1s var(--ease); }
+        .show { opacity: 1; transform: translateY(0); }
+
+        /* --- 6. FULLSCREEN MODAL (POPUP) --- */
+        .story-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--dark);
+            z-index: 2000;
+            transform: translateY(100%); /* Hidden below screen */
+            transition: transform 0.8s var(--ease);
+            overflow-y: auto;
+            display: flex; flex-direction: column;
+        }
+        
+        .story-modal.active { transform: translateY(0); } /* Slide up */
+
+        .modal-hero {
+            height: 60vh;
+            width: 100%;
+            background-size: cover; background-position: center;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 30px; right: 30px;
+            font-size: 2rem; color: white;
+            z-index: 2001;
+            mix-blend-mode: difference;
+        }
+
+        .modal-content {
+            padding: 4rem 10vw;
+            font-size: 1.2rem; line-height: 1.8;
+            max-width: 900px; margin: 0 auto;
+        }
+
+        .modal-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem; color: var(--gold);
+            margin-bottom: 2rem;
+        }
+
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+        footer {
+            padding: 4rem; text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-family: 'Playfair Display', serif; color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor" id="cursor"></div>
+    <div class="progress-bar" id="progressBar"></div>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>The World<br>Awaits</h1>
+            <div class="subtitle">Stories from the edge of the map</div>
+        </div>
+    </section>
+
+    <section class="stories-section">
+        <h2 class="section-header hidden">Selected Journals</h2>
+        
+        <div class="grid">
+            <div class="card hidden" onmousemove="tiltCard(event, this)" onmouseleave="resetCard(this)">
+                <div class="card-inner" style="background-image: url('https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="card-overlay">
+                    <h3>Northern Lights</h3>
+                    <p>Iceland's frozen wilderness.</p>
+                    <span class="read-btn" onclick="openStory(0)">Read Journal</span>
+                </div>
+            </div>
+
+            <div class="card hidden" onmousemove="tiltCard(event, this)" onmouseleave="resetCard(this)" style="transition-delay: 0.2s">
+                <div class="card-inner" style="background-image: url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="card-overlay">
+                    <h3>Kyoto Nights</h3>
+                    <p>Lanterns and shadows in Japan.</p>
+                    <span class="read-btn" onclick="openStory(1)">Read Journal</span>
+                </div>
+            </div>
+
+            <div class="card hidden" onmousemove="tiltCard(event, this)" onmouseleave="resetCard(this)" style="transition-delay: 0.4s">
+                <div class="card-inner" style="background-image: url('https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="card-overlay">
+                    <h3>Sahara Gold</h3>
+                    <p>Silence in the Moroccan dunes.</p>
+                    <span class="read-btn" onclick="openStory(2)">Read Journal</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Designed for the Explorers.</p>
+    </footer>
+
+    <div class="story-modal" id="modal">
+        <div class="close-modal" onclick="closeModal()">✕</div>
+        <div class="modal-hero" id="modalHero"></div>
+        <div class="modal-content">
+            <h2 id="modalTitle">Title</h2>
+            <div id="modalBody">Content...</div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA SOURCE ---
+        // (Make sure the Sahara image here matches the one in the HTML above, but higher resolution 'w=1920')
+        const stories = [
+            {
+                title: "Chasing the Aurora",
+                img: "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=1920&q=80",
+                text: "<p>The cold in Iceland is different. It's sharp, immediate, and oddly invigorating. We drove out of Reykjavik at 11 PM, hunting for a break in the clouds.</p><br><p>When the lights appeared, they didn't just glow; they danced. Ribbons of emerald and violet twisting across the sky. It's a reminder of how small we really are.</p>"
+            },
+            {
+                title: "Midnight in Kyoto",
+                img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1920&q=80",
+                text: "<p>The Gion district transforms after sunset. The tourists fade away, and the red lanterns begin to glow against the wooden machiya houses.</p><br><p>I sat by the Kamo river, watching the reflection of the city. The smell of yakitori smoke, the sound of distant laughter... Kyoto feels like a memory even while you are experiencing it.</p>"
+            },
+            {
+                title: "The Silent Dunes",
+                // UPDATED MODAL IMAGE
+                img: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1920&q=80",
+                text: "<p>Merzouga, Morocco. The sand here is finer than sugar. Climbing the dune for sunrise was exhausting, but the view at the top was worth every step.</p><br><p>For miles, there was nothing but gold. Absolute silence. No cars, no wind, just the shifting earth. It is the most peaceful place I have ever stood.</p>"
+            }
+        ];
+
+        // --- CURSOR LOGIC ---
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        document.querySelectorAll('a, button, .read-btn, .close-modal').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // --- 3D TILT LOGIC (Calculates mouse position relative to card center) ---
+        function tiltCard(e, card) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left; 
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            // Math to determine rotation amount. Dividing by 20 dampens the effect so it's not too extreme.
+            const rotateX = (centerY - y) / 20;
+            const rotateY = (x - centerX) / 20;
+
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        }
+
+        function resetCard(card) {
+            card.style.transform = `rotateX(0) rotateY(0)`;
+        }
+
+        // --- SCROLL REVEAL ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('show');
+            });
+        });
+        document.querySelectorAll('.hidden').forEach((el) => observer.observe(el));
+
+        // --- PROGRESS BAR ---
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        };
+
+        // --- MODAL LOGIC ---
+        function openStory(index) {
+            const data = stories[index];
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('modalBody').innerHTML = data.text;
+            document.getElementById('modalHero').style.backgroundImage = `url('${data.img}')`;
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
+</body>
+</html>

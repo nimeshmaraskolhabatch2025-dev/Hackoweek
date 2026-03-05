@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNova 2026 | Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --primary: #00d2ff; /* Cyan */
+            --secondary: #ff007f; /* Neon Pink */
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-color: #ffffff;
+            --bg-gradient: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- ANIMATED BACKGROUND SHAPES --- */
+        .shape {
+            position: absolute;
+            filter: blur(80px);
+            z-index: 0;
+            animation: float 10s infinite alternate;
+        }
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            top: -50px;
+            left: -50px;
+        }
+        .shape-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            bottom: -50px;
+            right: -50px;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 50px); }
+        }
+
+        /* --- GLASS CONTAINER --- */
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* --- FORM GRID --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        /* Full width for specific items */
+        .full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: var(--primary);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: 0.3s ease;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        select option {
+            background: #24243e; /* Solid background for dropdown options */
+            color: white;
+        }
+
+        /* --- EVENT SELECTION CARDS --- */
+        .events-section {
+            margin-top: 20px;
+        }
+        
+        .events-title {
+            margin-bottom: 15px;
+            font-family: 'Orbitron', sans-serif;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
+        }
+
+        .event-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .event-card {
+            flex: 1 1 150px;
+            position: relative;
+        }
+
+        .event-card input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 100%;
+            width: 100%;
+            z-index: 2;
+        }
+
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .card-content i {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #bbb;
+        }
+
+        /* Checked State for Cards */
+        .event-card input:checked + .card-content {
+            background: rgba(0, 210, 255, 0.2);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.2);
+        }
+
+        .event-card input:checked + .card-content i {
+            color: var(--primary);
+        }
+
+        /* --- BUTTON --- */
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            margin-top: 30px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+        }
+
+        /* --- SUCCESS MODAL --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: #24243e;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid var(--primary);
+            animation: popup 0.4s ease forwards;
+            max-width: 400px;
+        }
+
+        @keyframes popup {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .check-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: var(--glass-border);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .close-btn:hover { background: var(--secondary); }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+
+    <div class="container">
+        <header>
+            <h1>TECHNOVA 2026</h1>
+            <p class="subtitle">Join the Future. Register for the Ultimate Tech Fest.</p>
+        </header>
+
+        <form id="regForm">
+            <div class="form-grid">
+                <div class="input-group full-width">
+                    <label>Full Name</label>
+                    <input type="text" id="fullname" placeholder="John Doe" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="john@example.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Phone Number</label>
+                    <input type="tel" id="phone" placeholder="+1 234 567 890" pattern="[0-9]{10}" required>
+                </div>
+
+                <div class="input-group">
+                    <label>College/University</label>
+                    <input type="text" id="college" placeholder="Institute Name" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Year of Study</label>
+                    <select id="year" required>
+                        <option value="" disabled selected>Select Year</option>
+                        <option value="1">1st Year</option>
+                        <option value="2">2nd Year</option>
+                        <option value="3">3rd Year</option>
+                        <option value="4">4th Year</option>
+                    </select>
+                </div>
+                
+                <div class="events-section full-width">
+                    <h3 class="events-title">Select Events to Participate</h3>
+                    <div class="event-options">
+                        
+                        <div class="event-card">
+                            <input type="checkbox" name="events" value="hackathon">
+                            <div class="card-content">
+                                <i class="fas fa-code"></i>
+                                <span>Hackathon</span>
+                            </div>
+                        </div>
+
+                        <div class="event-card">
+                            <input type="checkbox" name="events" value="robotics">
+                            <div class="card-content">
+                                <i class="fas fa-robot"></i>
+                                <span>Robo Wars</span>
+                            </div>
+                        </div>
+
+                        <div class="event-card">
+                            <input type="checkbox" name="events" value="gaming">
+                            <div class="card-content">
+                                <i class="fas fa-gamepad"></i>
+                                <span>Esports</span>
+                            </div>
+                        </div>
+
+                        <div class="event-card">
+                            <input type="checkbox" name="events" value="quiz">
+                            <div class="card-content">
+                                <i class="fas fa-brain"></i>
+                                <span>Tech Quiz</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="input-group full-width" style="margin-top: 15px;">
+                    <label>T-Shirt Size (For Swag Kit)</label>
+                    <select id="tshirt">
+                        <option value="S">Small</option>
+                        <option value="M">Medium</option>
+                        <option value="L">Large</option>
+                        <option value="XL">Extra Large</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn-submit">CONFIRM REGISTRATION</button>
+        </form>
+    </div>
+
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <i class="fas fa-check-circle check-icon"></i>
+            <h2>Registration Successful!</h2>
+            <p>Welcome to TechNova. Check your email for the ticket.</p>
+            <button class="close-btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('regForm');
+        const modal = document.getElementById('successModal');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault(); // Stop actual submission for demo
+            
+            // Simple Validation Logic
+            const name = document.getElementById('fullname').value;
+            const email = document.getElementById('email').value;
+            
+            if(name && email) {
+                // Simulate sending data...
+                const btn = document.querySelector('.btn-submit');
+                const originalText = btn.innerText;
+                
+                btn.innerText = 'PROCESSING...';
+                btn.style.opacity = '0.7';
+
+                setTimeout(() => {
+                    modal.style.display = 'flex'; // Show modal
+                    btn.innerText = originalText;
+                    btn.style.opacity = '1';
+                    form.reset(); // Clear form
+                    
+                    // Reset Checkboxes visual state
+                    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                }, 1500);
+            }
+        });
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Close modal if clicking outside
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

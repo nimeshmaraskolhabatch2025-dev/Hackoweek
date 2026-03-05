@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOIR | Dining Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;500&family=Raleway:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #111111;
+            --card-bg: #1e1e1e;
+            --accent: #e63946; /* A pop of red */
+            --text-main: #eeeeee;
+            --text-muted: #aaaaaa;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Raleway', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Typography */
+        h1, h2, h3 { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 3px; }
+        
+        /* Navigation (Sticky) */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.9);
+            padding: 15px 0;
+            text-align: center;
+            z-index: 100;
+            border-bottom: 1px solid #333;
+        }
+        nav span { font-weight: 700; font-size: 1.5rem; letter-spacing: 5px; }
+
+        /* Parallax Hero Sections */
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Dark overlay on images so text is readable */
+        .parallax::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .parallax-title {
+            position: relative;
+            z-index: 2;
+            font-size: 3rem;
+            border: 4px solid var(--text-main);
+            padding: 10px 40px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        }
+
+        /* Menu Content */
+        .menu-section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .menu-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-left: 3px solid var(--accent);
+            transition: 0.3s;
+        }
+
+        .menu-card:hover {
+            background: #252525;
+            transform: translateX(5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .dish-name { font-size: 1.2rem; font-weight: 600; color: #fff; }
+        .dish-price { font-family: 'Oswald', sans-serif; font-size: 1.4rem; color: var(--accent); }
+        .dish-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+
+        /* Images for Sections (Replace URLs with real photos) */
+        .hero-bg { background-image: url('https://images.unsplash.com/photo-1544025162-d76690b6d012?auto=format&fit=crop&w=1200&q=80'); height: 80vh; }
+        .starters-bg { background-image: url('https://images.unsplash.com/photo-1541544744-378ca6e89299?auto=format&fit=crop&w=1200&q=80'); }
+        .mains-bg { background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80'); }
+
+        footer {
+            background: #000;
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid #333;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .btn-order {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 15px 40px;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
+        }
+        .btn-order:hover { background: white; color: black; }
+
+        /* Mobile tweaks */
+        @media(max-width: 600px) {
+            .parallax-title { font-size: 2rem; padding: 10px 20px; }
+            .hero-bg { height: 60vh; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <span>NOIR</span>
+</nav>
+
+<div class="parallax hero-bg">
+    <div style="text-align: center; position: relative; z-index: 2;">
+        <h1 style="font-size: 4rem; margin: 0;">Taste the Night</h1>
+        <p style="font-size: 1.2rem; margin-bottom: 30px;">Modern Fusion Dining</p>
+        <a href="#starters" class="btn-order">View Menu</a>
+    </div>
+</div>
+
+<div id="starters" class="parallax starters-bg">
+    <h2 class="parallax-title">Small Plates</h2>
+</div>
+
+<div class="menu-section">
+    <div class="menu-grid">
+        <div class="menu-card">
+            <div class="card-header">
+                <span class="dish-name">Spicy Tuna Tartare</span>
+                <span class="dish-price">$16</span>
+            </div>
+            <p class="dish-desc">Fresh ahi tuna, avocado, sesame oil, served on crispy wonton chips.</p>
+        </div>
+
+        <div class="menu-card">
+            <div class="card-header">
+                <span class="dish-name">Charred Octopus</span>
+                <span class="dish-price">$21</span>
+            </div>
+            <p class="dish-desc">Spanish octopus, romesco sauce, fingerling potatoes, paprika oil.</p>
+        </div>
+
+        <div class="menu-card">
+            <div class="card-header">
+                <span class="dish-name">Wagyu Sliders</span>
+                <span class="dish-price">$18</span>
+            </div>
+            <p class="dish-desc">Two mini burgers, brioche bun, caramelized onions, gruyère cheese.</p>
+        </div>
+    </div>
+</div>
+
+<div class="parallax mains-bg">
+    <h2 class="parallax-title">The Grill</h2>
+</div>
+
+<div class="menu-section">
+    <div class="menu-grid">
+        <div class="menu-card">
+            <div class="card-header">
+                <span class="dish-name">Dry Aged Ribeye</span>
+                <span class="dish-price">$45</span>
+            </div>
+            <p class="dish-desc">28-day aged, served with truffle butter and roasted garlic.</p>
+        </div>
+
+        <div class="menu-card">
+            <div class="card-header">
+                <span class="dish-name">Miso Glazed Black Cod</span>
+                <span class="dish-price">$36</span>
+            </div>
+            <p class="dish-desc">Sustainably sourced cod, sweet miso glaze, bok choy, ginger dashi.</p>
+        </div>
+
+        <div class="menu-card">
+            <div class="card-header">
+                <span class="dish-name">Wild Mushroom Pasta</span>
+                <span class="dish-price">$24</span>
+            </div>
+            <p class="dish-desc">Handmade pappardelle, truffle cream, parmesan reggiano.</p>
+        </div>
+        
+        <div class="menu-card">
+            <div class="card-header">
+                <span class="dish-name">Lamb Rack</span>
+                <span class="dish-price">$38</span>
+            </div>
+            <p class="dish-desc">Herb-crusted, mint chimichurri, roasted root vegetables.</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>NOIR DINING | 88 Sunset Blvd | 555-0909</p>
+    <p>&copy; 2024. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEON KICKS | Future of Footwear</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. CORE VARIABLES & RESET --- */
+        :root {
+            --bg-dark: #0f0c29;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --neon-blue: #00f3ff;
+            --neon-pink: #bc13fe;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* --- 2. ANIMATED BACKGROUND BLOBS --- */
+        /* This creates the moving colors behind the glass */
+        .background-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.6;
+            animation: float 10s infinite alternate;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--neon-pink); }
+        .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: var(--neon-blue); animation-delay: -5s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, 50px) scale(1.1); }
+        }
+
+        /* --- 3. UI COMPONENTS --- */
+        nav {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 12, 41, 0.8);
+        }
+
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon-blue); }
+        
+        .cart-btn {
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .cart-btn:hover { background: var(--neon-blue); color: var(--bg-dark); box-shadow: 0 0 15px var(--neon-blue); }
+
+        /* --- 4. GRID LAYOUT --- */
+        .container { max-width: 1400px; margin: 0 auto; padding: 4rem 2rem; }
+        
+        h1.section-title {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(to right, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive magic */
+            gap: 2.5rem;
+        }
+
+        /* --- 5. GLASSMORPHISM CARDS --- */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px); /* The frost effect */
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) rotateX(2deg);
+            border-color: var(--neon-pink);
+            box-shadow: 0 10px 30px rgba(188, 19, 254, 0.2);
+        }
+
+        .card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            transition: 0.4s;
+        }
+        
+        .card:hover img { transform: scale(1.05); }
+
+        .card-info h3 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+        .card-info p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .price { font-size: 1.5rem; font-weight: 700; color: var(--neon-blue); }
+
+        .btn-view {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, var(--neon-pink), #8a2be2);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+        .btn-view:hover { opacity: 0.9; transform: scale(1.05); }
+
+        /* --- 6. MODAL (POPUP) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+        
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal-content {
+            background: #16162d;
+            border: 1px solid var(--neon-blue);
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            transform: translateY(50px);
+            transition: 0.3s;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+        }
+
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 20px;
+            background: none; border: none;
+            color: white; font-size: 2rem; cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="background-blob blob-1"></div>
+    <div class="background-blob blob-2"></div>
+
+    <nav>
+        <div class="logo">NEON<span style="color:var(--neon-blue)">KICKS</span></div>
+        <button class="cart-btn">CART (<span id="cart-count">0</span>)</button>
+    </nav>
+
+    <div class="container">
+        <h1 class="section-title">LATEST DROPS</h1>
+        
+        <div class="product-grid" id="grid-target"></div>
+    </div>
+
+    <div class="modal-overlay" id="product-modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <h2 id="modal-title" style="margin-bottom:10px; font-family:'Orbitron', sans-serif;">Product Name</h2>
+            <img id="modal-img" src="" style="width:100%; border-radius:10px; margin-bottom:15px;">
+            <p id="modal-desc" style="color: #aaa; margin-bottom: 20px; line-height: 1.6;">Description goes here.</p>
+            <div class="price-row">
+                <span id="modal-price" class="price">$0.00</span>
+                <button class="btn-view" onclick="addToCart()">ADD TO CART</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA OBJECT (Advanced Concept) ---
+        // Instead of writing HTML, we hold data in an array. 
+        const products = [
+            { id: 1, name: "Cyber Runner 2077", price: 189, cat: "Running", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80", desc: "Engineered for the neon streets. Features self-lacing tech and reactive sole cushioning." },
+            // UPDATED PHOTO FOR NEON HIGH-TOPS
+            { id: 2, name: "Neon High-Tops", price: 145, cat: "Street", img: "https://images.unsplash.com/photo-1605348532760-6753d2c43329?auto=format&fit=crop&w=600&q=80", desc: "Classic silhouette meets future tech. Waterproof graphene coating included." },
+            { id: 3, name: "Void Walkers", price: 210, cat: "Casual", img: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?auto=format&fit=crop&w=600&q=80", desc: "Step into the void. Zero-gravity feel with ultra-light composite materials." },
+            { id: 4, name: "Glitch Boost V2", price: 165, cat: "Sport", img: "https://images.unsplash.com/photo-1584735175315-9d5df23860e6?auto=format&fit=crop&w=600&q=80", desc: "Visual distortion design pattern. Optimized for high-impact urban parkour." },
+            // UPDATED PHOTO FOR TITANIUM FLEX
+            { id: 5, name: "Titanium Flex", price: 250, cat: "Training", img: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=600&q=80", desc: "Metallic mesh upper for breathability and industrial-grade durability." },
+            { id: 6, name: "Solar Flares", price: 130, cat: "Summer", img: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&w=600&q=80", desc: "Absorbs sunlight to glow in the dark. Perfect for night runners." },
+            { id: 7, name: "Stealth Ops", price: 195, cat: "Tactical", img: "https://images.unsplash.com/photo-1491553895911-0055eca6402d?auto=format&fit=crop&w=600&q=80", desc: "Matte black finish with silent-step sole technology." },
+            { id: 8, name: "Quantum Leap", price: 299, cat: "Limited", img: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=600&q=80", desc: "Our flagship model. Changes color based on foot temperature." }
+        ];
+
+        // --- RENDER FUNCTION ---
+        const grid = document.getElementById('grid-target');
+
+        function renderProducts() {
+            grid.innerHTML = products.map(product => `
+                <div class="card">
+                    <img src="${product.img}" alt="${product.name}">
+                    <div class="card-info">
+                        <h3>${product.name}</h3>
+                        <p>${product.desc.substring(0, 50)}...</p>
+                        <div class="price-row">
+                            <span class="price">$${product.price}</span>
+                            <button class="btn-view" onclick="openModal(${product.id})">VIEW</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- INTERACTION LOGIC ---
+        const modal = document.getElementById('product-modal');
+        let cart = 0;
+
+        function openModal(id) {
+            // Find the product in our data array
+            const product = products.find(p => p.id === id);
+            
+            // Populate Modal
+            document.getElementById('modal-title').innerText = product.name;
+            document.getElementById('modal-img').src = product.img;
+            document.getElementById('modal-desc').innerText = product.desc;
+            document.getElementById('modal-price').innerText = `$${product.price}`;
+            
+            // Show Modal
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        function addToCart() {
+            cart++;
+            document.getElementById('cart-count').innerText = cart;
+            closeModal();
+            alert("Added to cart!"); // Simple feedback
+        }
+
+        // Close modal if clicking outside the box
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Initial Render
+        renderProducts();
+
+    </script>
+</body>
+</html>
