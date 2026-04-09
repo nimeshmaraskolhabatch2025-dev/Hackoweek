@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Smart Quiz Challenge</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    margin: 0;
+    padding: 40px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.quiz-container {
+    background: white;
+    padding: 30px;
+    width: 450px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+#timer {
+    text-align: right;
+    font-weight: bold;
+    color: #ff4081;
+    margin-bottom: 10px;
+}
+
+.question {
+    margin: 15px 0;
+}
+
+button {
+    background-color: #5a4bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #3d32c4;
+}
+
+.result {
+    margin-top: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.correct {
+    color: green;
+}
+
+.wrong {
+    color: red;
+}
+</style>
+</head>
+
+<body>
+
+<div class="quiz-container">
+
+<h1>Smart Quiz Challenge</h1>
+
+<div id="timer">Time Left: 60s</div>
+
+<form id="quizForm">
+
+<div class="question">
+<p>1. Which is the largest planet in our solar system?</p>
+<input type="radio" name="q1" value="1"> Jupiter<br>
+<input type="radio" name="q1" value="0"> Earth<br>
+<input type="radio" name="q1" value="0"> Mars<br>
+</div>
+
+<div class="question">
+<p>2. Who is known as the Father of Computers?</p>
+<input type="radio" name="q2" value="1"> Charles Babbage<br>
+<input type="radio" name="q2" value="0"> Bill Gates<br>
+<input type="radio" name="q2" value="0"> Alan Turing<br>
+</div>
+
+<div class="question">
+<p>3. Which country invented paper?</p>
+<input type="radio" name="q3" value="1"> China<br>
+<input type="radio" name="q3" value="0"> India<br>
+<input type="radio" name="q3" value="0"> Egypt<br>
+</div>
+
+<div class="question">
+<p>4. Which is the longest river in the world?</p>
+<input type="radio" name="q4" value="1"> Nile River<br>
+<input type="radio" name="q4" value="0"> Amazon River<br>
+<input type="radio" name="q4" value="0"> Yangtze River<br>
+</div>
+
+<div class="question">
+<p>5. Which metal is liquid at room temperature?</p>
+<input type="radio" name="q5" value="1"> Mercury<br>
+<input type="radio" name="q5" value="0"> Iron<br>
+<input type="radio" name="q5" value="0"> Copper<br>
+</div>
+
+<button type="button" onclick="calculateScore()">Submit</button>
+<button type="button" onclick="restartQuiz()">Restart</button>
+
+</form>
+
+<div class="result" id="result"></div>
+
+</div>
+
+<script>
+
+let timeLeft = 60;
+let timerDisplay = document.getElementById("timer");
+
+let countdown = setInterval(function() {
+    timeLeft--;
+    timerDisplay.innerHTML = "Time Left: " + timeLeft + "s";
+
+    if (timeLeft <= 0) {
+        clearInterval(countdown);
+        calculateScore();
+    }
+}, 1000);
+
+function calculateScore() {
+    clearInterval(countdown);
+
+    let score = 0;
+    let form = document.forms["quizForm"];
+
+    for (let i = 1; i <= 5; i++) {
+        let question = form["q" + i];
+        if (question.value == "1") {
+            score++;
+        }
+    }
+
+    let result = document.getElementById("result");
+    result.innerHTML = "Your Score: " + score + " / 5<br>";
+
+    if (score == 5) {
+        result.innerHTML += "<span class='correct'>Perfect Score! 🎉</span>";
+        confetti();
+    } else {
+        result.innerHTML += "<span class='wrong'>Good Try! Keep Practicing!</span>";
+    }
+}
+
+function restartQuiz() {
+    location.reload();
+}
+
+function confetti() {
+    for (let i = 0; i < 120; i++) {
+        let conf = document.createElement("div");
+        conf.style.position = "fixed";
+        conf.style.width = "8px";
+        conf.style.height = "8px";
+        conf.style.backgroundColor = "#" + Math.floor(Math.random()*16777215).toString(16);
+        conf.style.top = Math.random() * window.innerHeight + "px";
+        conf.style.left = Math.random() * window.innerWidth + "px";
+        conf.style.opacity = 0.7;
+        document.body.appendChild(conf);
+
+        setTimeout(() => conf.remove(), 2000);
+    }
+}
+
+</script>
+
+</body>
+</html>
