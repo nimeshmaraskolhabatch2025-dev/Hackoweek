@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shopping Cart (Linked List)</title>
+<style>
+  body {
+    font-family: Arial;
+    margin: 0;
+    background: linear-gradient(to right, #ff9a9e, #6a82fb);
+    color: #333;
+  }
+
+  header {
+    background: #d81b60;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 24px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  .product, .cart, .add-form {
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 15px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  input {
+    padding: 8px;
+    margin: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  button {
+    padding: 8px 12px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    background: #ec407a;
+    color: white;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #ad1457;
+  }
+
+  h2, h3 {
+    color: #d81b60;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  Shopping Cart using Linked List
+</header>
+
+<div class="container">
+
+<div class="add-form">
+  <h3>Add New Product</h3>
+  <input type="number" id="id" placeholder="ID">
+  <input type="text" id="name" placeholder="Name">
+  <input type="number" id="price" placeholder="Price">
+  <br>
+  <button onclick="addHead()">Add at Head</button>
+  <button onclick="addTail()">Add at Tail</button>
+</div>
+
+<div class="product">
+  <h3>Preset Products</h3>
+  <p>Product A - ₹300</p>
+  <button onclick="insertHead(101,'Product A',300)">Add at Head</button>
+  <button onclick="insertTail(101,'Product A',300)">Add at Tail</button>
+
+  <p>Product B - ₹600</p>
+  <button onclick="insertHead(102,'Product B',600)">Add at Head</button>
+  <button onclick="insertTail(102,'Product B',600)">Add at Tail</button>
+
+  <p>Product C - ₹900</p>
+  <button onclick="insertHead(103,'Product C',900)">Add at Head</button>
+  <button onclick="insertTail(103,'Product C',900)">Add at Tail</button>
+</div>
+
+<h2>Your Cart</h2>
+<div id="cart" class="cart"></div>
+
+<h3>Total: ₹<span id="total">0</span></h3>
+
+</div>
+
+<script>
+class Node {
+  constructor(id, name, price) {
+    this.id = id;
+    this.name = name;
+    this.price = price;
+    this.next = null;
+  }
+}
+
+class LinkedList {
+  constructor() {
+    this.head = null;
+  }
+
+  insertAtHead(id, name, price) {
+    const newNode = new Node(id, name, price);
+    newNode.next = this.head;
+    this.head = newNode;
+  }
+
+  insertAtTail(id, name, price) {
+    const newNode = new Node(id, name, price);
+
+    if (!this.head) {
+      this.head = newNode;
+      return;
+    }
+
+    let temp = this.head;
+    while (temp.next !== null) {
+      temp = temp.next;
+    }
+    temp.next = newNode;
+  }
+
+  removeById(id) {
+    if (!this.head) return;
+
+    if (this.head.id === id) {
+      this.head = this.head.next;
+      return;
+    }
+
+    let temp = this.head;
+    while (temp.next && temp.next.id !== id) {
+      temp = temp.next;
+    }
+
+    if (temp.next) {
+      temp.next = temp.next.next;
+    }
+  }
+
+  display() {
+    let temp = this.head;
+    let cartDiv = document.getElementById('cart');
+    let total = 0;
+
+    cartDiv.innerHTML = '';
+
+    while (temp !== null) {
+      total += temp.price;
+
+      cartDiv.innerHTML += `
+        <p>
+          ID: ${temp.id} | ${temp.name} - ₹${temp.price}
+          <button onclick="removeItem(${temp.id})">Remove</button>
+        </p>
+      `;
+
+      temp = temp.next;
+    }
+
+    document.getElementById('total').innerText = total;
+  }
+}
+
+const cartList = new LinkedList();
+
+function getInput() {
+  const id = parseInt(document.getElementById('id').value);
+  const name = document.getElementById('name').value;
+  const price = parseInt(document.getElementById('price').value);
+  return { id, name, price };
+}
+
+function addHead() {
+  const { id, name, price } = getInput();
+  cartList.insertAtHead(id, name, price);
+  cartList.display();
+}
+
+function addTail() {
+  const { id, name, price } = getInput();
+  cartList.insertAtTail(id, name, price);
+  cartList.display();
+}
+
+function removeItem(id) {
+  cartList.removeById(id);
+  cartList.display();
+}
+</script>
+
+</body>
+</html>
