@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Printer Queue (FIFO)</title>
+<style>
+  body {
+    font-family: Arial;
+    margin: 0;
+    background: linear-gradient(to right, #e6e6fa, #ffffff);
+  }
+
+  header {
+    background: #b39ddb;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 22px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  .box {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  input {
+    padding: 8px;
+    width: 60%;
+    border-radius: 5px;
+    border: 1px solid #d1c4e9;
+  }
+
+  button {
+    padding: 8px 12px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    background: #9575cd;
+    color: white;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #7e57c2;
+  }
+
+  h3 {
+    color: #7e57c2;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  Printer Queue Simulation (FIFO)
+</header>
+
+<div class="container">
+
+<div class="box">
+  <h3>Add Print Job</h3>
+  <input type="text" id="job" placeholder="Enter job name">
+  <button onclick="enqueue()">Enqueue</button>
+</div>
+
+<div class="box">
+  <button onclick="dequeue()">Process (Dequeue)</button>
+</div>
+
+<div class="box">
+  <h3>Current Job:</h3>
+  <p id="current">None</p>
+</div>
+
+<div class="box">
+  <h3>Queue (FIFO Order):</h3>
+  <p id="queue"></p>
+</div>
+
+</div>
+
+<script>
+let queue = [];
+let currentJob = null;
+
+function enqueue() {
+  const job = document.getElementById('job').value;
+  if (!job) return;
+
+  queue.push(job);
+  document.getElementById('job').value = '';
+  updateUI();
+}
+
+function dequeue() {
+  if (queue.length === 0) {
+    currentJob = 'No jobs in queue';
+  } else {
+    currentJob = queue.shift();
+  }
+  updateUI();
+}
+
+function updateUI() {
+  document.getElementById('current').innerText = currentJob || 'None';
+  document.getElementById('queue').innerText = queue.join(' → ');
+}
+</script>
+
+</body>
+</html>
