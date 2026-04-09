@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevLaunch Bootcamp</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+/* Animated Background */
+
+body{
+background:linear-gradient(-45deg,#141e30,#243b55,#ff9a9e,#6a11cb);
+background-size:400% 400%;
+animation:bgMove 12s infinite ease;
+color:white;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+/* Navbar */
+
+nav{
+width:100%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 40px;
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(10px);
+}
+
+nav h2{
+color:#fff;
+letter-spacing:1px;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin-left:20px;
+font-size:16px;
+}
+
+/* Hero */
+
+.hero{
+text-align:center;
+margin-top:80px;
+padding:30px;
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(15px);
+border-radius:20px;
+width:90%;
+max-width:800px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* Neon Title */
+
+.hero h1{
+font-size:40px;
+margin-bottom:15px;
+text-shadow:0 0 10px #fff,0 0 20px #ff7eb3;
+}
+
+/* Typing Text */
+
+#typing{
+color:#ffeaa7;
+font-weight:bold;
+}
+
+/* Course Grid */
+
+.course{
+margin-top:40px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:20px;
+}
+
+/* Cards */
+
+.card{
+background:rgba(255,255,255,0.18);
+padding:20px;
+border-radius:12px;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-8px) scale(1.05);
+background:rgba(255,255,255,0.3);
+}
+
+/* Button */
+
+button{
+margin-top:25px;
+padding:12px 28px;
+border:none;
+border-radius:8px;
+background:linear-gradient(90deg,#ff758c,#ff7eb3);
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.1);
+box-shadow:0 0 15px rgba(255,255,255,0.8);
+}
+
+/* Footer */
+
+footer{
+margin-top:50px;
+padding:20px;
+font-size:14px;
+color:#eee;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<nav>
+<h2>DevLaunch</h2>
+<div>
+<a href="#">Home</a>
+<a href="#">Programs</a>
+<a href="#">Join</a>
+</div>
+</nav>
+
+<div class="hero">
+
+<h1>Become a <span id="typing"></span></h1>
+
+<p>Start your coding journey with our intensive web development bootcamp. Learn HTML, CSS and JavaScript while building real projects.</p>
+
+<div class="course">
+
+<div class="card">
+<h3>HTML Basics</h3>
+<p>Understand website structure</p>
+</div>
+
+<div class="card">
+<h3>CSS Styling</h3>
+<p>Create modern layouts</p>
+</div>
+
+<div class="card">
+<h3>JavaScript</h3>
+<p>Add dynamic features</p>
+</div>
+
+<div class="card">
+<h3>Real Projects</h3>
+<p>Build your portfolio</p>
+</div>
+
+</div>
+
+<button>Start Learning</button>
+
+</div>
+
+<footer>
+©️ 2026 DevLaunch Coding Bootcamp
+</footer>
+
+<script>
+
+const words=["Frontend Developer","Creative Coder","Web Designer"];
+let i=0;
+let j=0;
+let current="";
+let isDeleting=false;
+
+function type(){
+
+current=words[i];
+
+if(isDeleting){
+document.getElementById("typing").textContent=current.substring(0,j--);
+}else{
+document.getElementById("typing").textContent=current.substring(0,j++);
+}
+
+if(!isDeleting && j===current.length){
+isDeleting=true;
+setTimeout(type,1000);
+return;
+}
+
+if(isDeleting && j===0){
+isDeleting=false;
+i=(i+1)%words.length;
+}
+
+setTimeout(type,isDeleting?50:100);
+}
+
+type();
+
+</script>
+
+</body>
+</html>
