@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Smart Task Manager</title>
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#84fab0,#8fd3f4);
+transition:0.3s;
+}
+
+.dark{
+background:#0f172a;
+color:white;
+}
+
+.container{
+width:480px;
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 12px 35px rgba(0,0,0,0.25);
+transition:0.3s;
+}
+
+.container:hover{
+transform:translateY(-5px);
+}
+
+.dark .container{
+background:#1e293b;
+}
+
+h1{
+text-align:center;
+}
+
+#time{
+text-align:center;
+color:gray;
+margin-bottom:10px;
+}
+
+.input-section{
+display:flex;
+gap:8px;
+margin-bottom:10px;
+}
+
+input,select{
+padding:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+input{
+flex:1;
+}
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:8px;
+background:linear-gradient(45deg,#36d1dc,#5b86e5);
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+opacity:0.9;
+}
+
+.search{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+ul{
+list-style:none;
+padding:0;
+}
+
+li{
+background:#f1f5f9;
+padding:12px;
+margin-bottom:10px;
+border-radius:10px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+cursor:grab;
+transition:0.2s;
+}
+
+li:hover{
+transform:scale(1.02);
+}
+
+.dark li{
+background:#334155;
+}
+
+.completed{
+text-decoration:line-through;
+color:gray;
+}
+
+.category{
+font-size:12px;
+margin-left:10px;
+background:#e2e8f0;
+padding:3px 6px;
+border-radius:5px;
+}
+
+.delete{
+background:#ef4444;
+color:white;
+border:none;
+padding:5px 10px;
+border-radius:5px;
+cursor:pointer;
+}
+
+.progress-bar{
+width:100%;
+height:10px;
+background:#ddd;
+border-radius:10px;
+margin-top:15px;
+}
+
+.progress{
+height:100%;
+width:0%;
+background:#22c55e;
+border-radius:10px;
+}
+
+.toggle{
+position:absolute;
+top:20px;
+right:20px;
+font-size:18px;
+}
+
+</style>
+</head>
+
+<body>
+
+<button class="toggle" onclick="toggleMode()">🌙</button>
+
+<div class="container">
+
+<h1>📋 Smart Task Manager</h1>
+
+<div id="time"></div>
+
+<input class="search" id="search" placeholder="Search tasks..." onkeyup="display()">
+
+<div class="input-section">
+<input type="text" id="taskInput" placeholder="Enter task">
+<select id="category">
+<option>Work</option>
+<option>Study</option>
+<option>Personal</option>
+</select>
+<button onclick="addTask()">Add</button>
+</div>
+
+<ul id="taskList"></ul>
+
+<div class="progress-bar">
+<div class="progress" id="progress"></div>
+</div>
+
+</div>
+
+<script>
+
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+function save(){
+localStorage.setItem("tasks",JSON.stringify(tasks));
+}
+
+function showTime(){
+document.getElementById("time").innerText=new Date().toLocaleString();
+}
+setInterval(showTime,1000);
+
+function addTask(){
+
+let text=document.getElementById("taskInput").value.trim();
+let category=document.getElementById("category").value;
+
+if(text===""){
+alert("Enter task");
+return;
+}
+
+tasks.push({text,category,completed:false});
+
+document.getElementById("taskInput").value="";
+
+save();
+display();
+
+}
+
+function display(){
+
+let list=document.getElementById("taskList");
+let search=document.getElementById("search").value.toLowerCase();
+
+list.innerHTML="";
+
+tasks.forEach((task,index)=>{
+
+if(!task.text.toLowerCase().includes(search)) return;
+
+let li=document.createElement("li");
+li.draggable=true;
+
+let span=document.createElement("span");
+span.innerHTML=task.text+" <span class='category'>"+task.category+"</span>";
+
+if(task.completed) span.classList.add("completed");
+
+span.onclick=function(){
+task.completed=!task.completed;
+save();
+display();
+};
+
+let del=document.createElement("button");
+del.textContent="Delete";
+del.className="delete";
+
+del.onclick=function(){
+tasks.splice(index,1);
+save();
+display();
+};
+
+li.appendChild(span);
+li.appendChild(del);
+
+li.addEventListener("dragstart",()=>dragIndex=index);
+li.addEventListener("dragover",(e)=>e.preventDefault());
+li.addEventListener("drop",()=>{
+
+let item=tasks.splice(dragIndex,1)[0];
+tasks.splice(index,0,item);
+
+save();
+display();
+
+});
+
+list.appendChild(li);
+
+});
+
+updateProgress();
+checkComplete();
+
+}
+
+function updateProgress(){
+
+let completed=tasks.filter(t=>t.completed).length;
+let percent=tasks.length===0?0:(completed/tasks.length)*100;
+
+document.getElementById("progress").style.width=percent+"%";
+
+}
+
+function checkComplete(){
+
+if(tasks.length>0 && tasks.every(t=>t.completed)){
+alert("🎉 All tasks completed! Great job!");
+}
+
+}
+
+function toggleMode(){
+document.body.classList.toggle("dark");
+}
+
+document.getElementById("taskInput").addEventListener("keypress",function(e){
+if(e.key==="Enter") addTask();
+});
+
+display();
+
+</script>
+
+</body>
+</html>
