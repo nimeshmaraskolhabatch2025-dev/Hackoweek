@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Smart Book Tracker</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+/* Background */
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#2c003e,#ff6a00,#ee0979);
+background-size:400% 400%;
+animation:bg 12s infinite alternate;
+color:white;
+}
+
+@keyframes bg{
+0%{background-position:0% 50%;}
+100%{background-position:100% 50%;}
+}
+
+/* Container */
+
+.container{
+width:720px;
+padding:30px;
+border-radius:20px;
+background:rgba(0,0,0,0.35);
+box-shadow:0 20px 50px rgba(0,0,0,0.6);
+text-align:center;
+}
+
+/* Title */
+
+h1{
+margin-bottom:25px;
+font-size:36px;
+letter-spacing:1px;
+}
+
+/* Inputs */
+
+input{
+padding:12px;
+margin:6px;
+border:none;
+border-radius:25px;
+outline:none;
+width:42%;
+}
+
+/* Buttons */
+
+button{
+padding:10px 22px;
+margin:6px;
+border:none;
+border-radius:30px;
+cursor:pointer;
+font-weight:bold;
+transition:0.3s;
+}
+
+.add{
+background:#00ff9d;
+color:black;
+}
+
+.remove{
+background:#ff3b3b;
+color:white;
+}
+
+.search{
+background:#ffd54f;
+color:black;
+}
+
+button:hover{
+transform:scale(1.1);
+box-shadow:0 0 12px white;
+}
+
+/* Book Shelf Grid */
+
+.books{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:18px;
+margin-top:25px;
+}
+
+/* Book Card */
+
+.book{
+background:white;
+color:black;
+padding:16px;
+border-radius:12px;
+font-weight:bold;
+box-shadow:0 10px 20px rgba(0,0,0,0.4);
+transition:0.3s;
+}
+
+.book:hover{
+transform:rotate(-2deg) scale(1.05);
+background:#ffe082;
+}
+
+.book p{
+font-size:13px;
+margin-top:6px;
+}
+
+#result{
+margin-top:12px;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📚 Smart Book Tracker</h1>
+
+<input type="text" id="title" placeholder="Book name">
+<input type="text" id="author" placeholder="Author name">
+
+<br>
+
+<button class="add" onclick="addBook()">Add</button>
+<button class="remove" onclick="removeBook()">Remove</button>
+
+<br><br>
+
+<input type="text" id="searchTitle" placeholder="Search book">
+<button class="search" onclick="searchBook()">Find</button>
+
+<p id="result"></p>
+
+<div class="books" id="bookList"></div>
+
+</div>
+
+<script>
+
+const MAX_BOOKS = 10;
+let books = [];
+
+function displayBooks(){
+
+let list=document.getElementById("bookList");
+list.innerHTML="";
+
+books.forEach(book=>{
+
+let card=document.createElement("div");
+card.className="book";
+
+card.innerHTML=
+"<div>"+book.title+"</div><p>"+book.author+"</p>";
+
+list.appendChild(card);
+
+});
+
+}
+
+function addBook(){
+
+let title=document.getElementById("title").value;
+let author=document.getElementById("author").value;
+
+if(books.length>=MAX_BOOKS){
+alert("Maximum capacity reached!");
+return;
+}
+
+books.push({title,author});
+
+displayBooks();
+
+}
+
+function removeBook(){
+
+let title=document.getElementById("title").value;
+
+let index=books.findIndex(book=>book.title===title);
+
+if(index!=-1){
+
+books.splice(index,1);
+alert("Book removed");
+
+}else{
+
+alert("Book not found");
+
+}
+
+displayBooks();
+
+}
+
+function searchBook(){
+
+let title=document.getElementById("searchTitle").value;
+
+let found=books.find(book=>book.title===title);
+
+if(found){
+
+document.getElementById("result").innerText =
+"Found: "+found.title+" by "+found.author;
+
+}else{
+
+document.getElementById("result").innerText =
+"No book found";
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
