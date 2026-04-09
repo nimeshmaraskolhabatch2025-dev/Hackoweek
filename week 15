@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Book (Binary Search)</title>
+<style>
+  :root{
+    --primary:#ef5350;
+    --primary-dark:#c62828;
+    --bg:#fff5f5;
+    --card:#ffffff;
+    --muted:#ffcdd2;
+    --text:#333;
+  }
+  *{box-sizing:border-box}
+  body{font-family: Arial, Helvetica, sans-serif; margin:0; background:var(--bg); color:var(--text)}
+
+  /* Navbar */
+  .navbar{
+    background:var(--primary);
+    color:#fff;
+    padding:14px 24px;
+    display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:10;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+  }
+  .brand{font-weight:700; letter-spacing:.5px}
+  .nav-actions{opacity:.9; font-size:14px}
+
+  /* Layout */
+  .wrapper{max-width:1100px; margin:24px auto; padding:0 16px}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+  .card{
+    background:var(--card);
+    border-radius:14px; padding:20px;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+  }
+  .full{grid-column:1 / -1}
+
+  h2{margin:0 0 10px 0; color:var(--primary-dark)}
+  p.helper{margin:0 0 12px 0; color:#777; font-size:14px}
+
+  /* Inputs */
+  .field{display:flex; gap:10px; flex-wrap:wrap}
+  input{
+    flex:1 1 200px; padding:10px 12px; border-radius:8px;
+    border:1px solid var(--muted); outline:none;
+  }
+  input:focus{border-color:var(--primary)}
+
+  .btn{
+    padding:10px 14px; border:none; border-radius:8px;
+    background:var(--primary); color:#fff; cursor:pointer; font-weight:600;
+  }
+  .btn:hover{background:var(--primary-dark)}
+  .btn.secondary{background:#f8a7a6}
+
+  /* List */
+  .list{margin-top:10px}
+  .item{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 12px; border-bottom:1px solid #f0f0f0;
+  }
+  .item:last-child{border-bottom:none}
+  .name{font-weight:600}
+  .phone{color:#666}
+
+  .badge{
+    background:#ffe0e0; color:#a11; padding:4px 8px; border-radius:999px; font-size:12px;
+  }
+
+  .result{margin-top:10px; font-weight:600}
+
+  /* Footer */
+  .footer{
+    margin-top:30px; padding:16px; text-align:center; color:#888; font-size:13px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px){
+    .grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="brand">📇 ContactBook Pro</div>
+  <div class="nav-actions">Array • Sort • Binary Search</div>
+</div>
+
+<div class="wrapper">
+  <div class="grid">
+
+    <div class="card">
+      <h2>Add Contact</h2>
+      <p class="helper">Store contacts in an array. List auto-sorts alphabetically.</p>
+      <div class="field">
+        <input type="text" id="name" placeholder="Full Name">
+        <input type="text" id="phone" placeholder="Phone Number">
+        <button class="btn" onclick="addContact()">Add</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Search Contact</h2>
+      <p class="helper">Binary search (O(log n)) on sorted list.</p>
+      <div class="field">
+        <input type="text" id="searchName" placeholder="Search by name">
+        <button class="btn" onclick="searchContact()">Search</button>
+      </div>
+      <div id="result" class="result"></div>
+    </div>
+
+    <div class="card full">
+      <h2>Contacts <span id="count" class="badge">0</span></h2>
+      <div id="list" class="list"></div>
+    </div>
+
+  </div>
+
+  <div class="footer">© 2026 ContactBook • Clean UI + DSA (Binary Search)</div>
+</div>
+
+<script>
+let contacts = [];
+
+function addContact(){
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  if(!name || !phone) return;
+
+  contacts.push({name, phone});
+  contacts.sort((a,b)=> a.name.localeCompare(b.name));
+
+  document.getElementById('name').value='';
+  document.getElementById('phone').value='';
+  displayContacts();
+}
+
+function binarySearch(target){
+  let low=0, high=contacts.length-1;
+  target = target.toLowerCase();
+
+  while(low<=high){
+    const mid = Math.floor((low+high)/2);
+    const midName = contacts[mid].name.toLowerCase();
+
+    if(midName===target) return contacts[mid];
+    if(midName < target) low = mid+1; else high = mid-1;
+  }
+  return null;
+}
+
+function searchContact(){
+  const name = document.getElementById('searchName').value.trim();
+  const res = binarySearch(name);
+  const el = document.getElementById('result');
+  if(res){
+    el.textContent = `Found: ${res.name} • ${res.phone}`;
+  } else {
+    el.textContent = 'Contact not found';
+  }
+}
+
+function displayContacts(){
+  const list = document.getElementById('list');
+  const count = document.getElementById('count');
+  list.innerHTML='';
+
+  contacts.forEach(c=>{
+    const div = document.createElement('div');
+    div.className='item';
+    div.innerHTML = `
+      <div>
+        <div class="name">${c.name}</div>
+        <div class="phone">${c.phone}</div>
+      </div>
+      <span class="badge">Saved</span>
+    `;
+    list.appendChild(div);
+  });
+
+  count.textContent = contacts.length;
+}
+</script>
+
+</body>
+</html>
+`
